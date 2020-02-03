@@ -1,15 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class jetPack : MonoBehaviour
 {
 
     [SerializeField] float rcsThrust = 100f;
+
+    [SerializeField] AudioClip mainEngine;
     [SerializeField] float mainThrust = 100f;
+    [SerializeField] AudioClip mainDeath;
+    [SerializeField] AudioClip mainFinish;
+    [SerializeField] AudioClip mainStart;
+    [SerializeField] AudioClip Explode;
 
     Rigidbody rigidBody;
     AudioSource audioSource;
+
+    enum State { Alive, Dying, Transcending }
+    State state = State.Alive;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,35 +29,57 @@ public class jetPack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Thrust();
-        Rotate();
+        if (state == State.Alive)
+        {
+            RespondToThrustInput();
+            RespondToRotateInput();
+        }
     }
 
     void OnCollisionEnter(Collision collision)
     {
+
+        if (state != State.Alive)
+        {
+            return;
+        }
+
         switch (collision.gameObject.tag)
         {
             case "Friendly":
-                print("you be gucci"); // Todo remove
                 break;
-            case "power":
-                print("power up"); // Todo remove
+            case "finish":
+                FinishingSequence();
                 break;
             default:
-                print("dead"); // Todo remove
+                print("DEAD!"); // TODO remove
+                DeathSequence();
                 break;
         }
     }
 
-    private void Thrust()
+    private void FinishingSequence()
+    {
+        state = State.Transcending;
+        audioSource.Stop();
+        audioSource.PlayOneShot(mainFinish);
+        Invoke("LoadNextLevel", 1f);
+    }
+
+    private void DeathSequence()
+    {
+        state = State.Dying;
+        audioSource.Stop();
+        audioSource.PlayOneShot(mainDeath);
+        Invoke("Play.Explode", 1f);
+        Invoke("LoadFirstLevel", 2f);
+    }
+
+    private void RespondToThrustInput()
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            rigidBody.AddRelativeForce(Vector3.up * mainThrust);
-            if (!audioSource.isPlaying)
-            {
-                audioSource.Play();
-            }
+            StartEngine();
         }
         else
         {
@@ -56,7 +87,16 @@ public class jetPack : MonoBehaviour
         }
     }
 
-    private void Rotate()
+    private void StartEngine()
+    {
+        rigidBody.AddRelativeForce(Vector3.up * mainThrust);
+        if (!audioSource.isPlaying)
+        {
+            audioSource.PlayOneShot(mainEngine);
+        }
+    }
+
+    private void RespondToRotateInput()
     {
 
         rigidBody.freezeRotation = true;
@@ -70,11 +110,20 @@ public class jetPack : MonoBehaviour
 
         else if (Input.GetKey(KeyCode.D))
         {
-            print(" Rotating right");
             transform.Rotate(-Vector3.forward * rotationThisFrame);
         }
 
         rigidBody.freezeRotation = false;
+    }
+
+    private void LoadFirstLevel()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    private void LoadNextLevel()
+    {
+        SceneManager.LoadScene(1);
     }
 }
 

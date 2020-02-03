@@ -10,7 +10,12 @@ PrefabInstance:
     - target: {fileID: 5652325958826043389, guid: 57391d0d5e7804c7bbd37c71648ff4d4,
         type: 3}
       propertyPath: m_Name
-      value: obstacle
+      value: obstacle Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 5652325958826043389, guid: 57391d0d5e7804c7bbd37c71648ff4d4,
+        type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 5652325958826043385, guid: 57391d0d5e7804c7bbd37c71648ff4d4,
         type: 3}
@@ -70,22 +75,22 @@ PrefabInstance:
     - target: {fileID: 5652325958826043385, guid: 57391d0d5e7804c7bbd37c71648ff4d4,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 10.258569
+      value: 14.376358
       objectReference: {fileID: 0}
     - target: {fileID: 5652325958826043385, guid: 57391d0d5e7804c7bbd37c71648ff4d4,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 4.3370442
+      value: 64.27631
       objectReference: {fileID: 0}
     - target: {fileID: 5652325958826043385, guid: 57391d0d5e7804c7bbd37c71648ff4d4,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 8.03689
+      value: 11.2628975
       objectReference: {fileID: 0}
     - target: {fileID: 5652325958826043391, guid: 57391d0d5e7804c7bbd37c71648ff4d4,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 90e004f3798f849f4aab29dc65404813, type: 2}
+      objectReference: {fileID: 2100000, guid: 20208592860334c27b8450aab0aeb405, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 57391d0d5e7804c7bbd37c71648ff4d4, type: 3}
