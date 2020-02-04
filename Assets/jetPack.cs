@@ -6,6 +6,8 @@ public class jetPack : MonoBehaviour
 {
 
     [SerializeField] float rcsThrust = 100f;
+    [SerializeField] float levelLoadDelay = 2f;
+    [SerializeField] float effectsLoadDelay = 1f;
 
     [SerializeField] AudioClip mainEngine;
     [SerializeField] float mainThrust = 100f;
@@ -13,6 +15,10 @@ public class jetPack : MonoBehaviour
     [SerializeField] AudioClip mainFinish;
     [SerializeField] AudioClip mainStart;
     [SerializeField] AudioClip Explode;
+
+    [SerializeField] ParticleSystem ExplodeParticles;
+    [SerializeField] ParticleSystem mainFinishParticles;
+    [SerializeField] ParticleSystem JetsParticles;
 
     Rigidbody rigidBody;
     AudioSource audioSource;
@@ -62,8 +68,9 @@ public class jetPack : MonoBehaviour
     {
         state = State.Transcending;
         audioSource.Stop();
+        mainFinishParticles.Play();
         audioSource.PlayOneShot(mainFinish);
-        Invoke("LoadNextLevel", 1f);
+        Invoke("LoadNextLevel", levelLoadDelay);
     }
 
     private void DeathSequence()
@@ -71,10 +78,16 @@ public class jetPack : MonoBehaviour
         state = State.Dying;
         audioSource.Stop();
         audioSource.PlayOneShot(mainDeath);
-        Invoke("Play.Explode", 1f);
-        Invoke("LoadFirstLevel", 2f);
+        Invoke("PlayExplode", effectsLoadDelay);
+        Invoke("LoadFirstLevel", levelLoadDelay);
     }
 
+    private void PlayExplode()
+    {
+        audioSource.PlayOneShot(Explode);
+        ExplodeParticles.Play();
+
+    }
     private void RespondToThrustInput()
     {
         if (Input.GetKey(KeyCode.Space))
@@ -89,10 +102,11 @@ public class jetPack : MonoBehaviour
 
     private void StartEngine()
     {
-        rigidBody.AddRelativeForce(Vector3.up * mainThrust);
+        rigidBody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
         if (!audioSource.isPlaying)
         {
             audioSource.PlayOneShot(mainEngine);
+            JetsParticles.Play();
         }
     }
 
